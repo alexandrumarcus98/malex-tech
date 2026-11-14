@@ -1,0 +1,143 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+
+const projects = (await getCollection('projects', ({ data }) => data.featured)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="space-y-5">
+    <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 font-mono text-xs text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-400">
+      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+      <span>{SITE.status}</span>
+    </div>
+
+    <div class="space-y-3">
+      <h1 class="text-3xl font-semibold tracking-tight text-zinc-950 sm:text-4xl dark:text-zinc-50">
+        {SITE.name}
+      </h1>
+      <p class="text-lg text-zinc-600 dark:text-zinc-300">{SITE.tagline}</p>
+      <p class="max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base dark:text-zinc-400">
+        {SITE.bio}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3 pt-1">
+      <a
+        href={`mailto:${SITE.email}`}
+        class="inline-flex items-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+      >
+        Get in touch
+      </a>
+      <a
+        href={SITE.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600"
+      >
+        GitHub ↗
+      </a>
+    </div>
+  </section>
+
+  <!-- Selected Projects -->
+  <section class="mt-16 space-y-5">
+    <div class="flex items-baseline justify-between">
+      <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        Selected Projects
+      </h2>
+      <a href="/projects" class="font-mono text-xs text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-100">
+        All projects →
+      </a>
+    </div>
+
+    <div class="grid gap-4">
+      {projects.map((project) => (
+        <a
+          href={`/projects/${project.id}`}
+          class="group block rounded-lg border border-zinc-200 bg-white p-5 transition hover:border-zinc-400 dark:border-zinc-800/90 dark:bg-zinc-900/50 dark:hover:border-zinc-700"
+        >
+          <div class="flex items-baseline justify-between gap-4">
+            <h3 class="font-medium text-zinc-900 transition group-hover:text-zinc-950 dark:text-zinc-100 dark:group-hover:text-white">
+              {project.data.title}
+            </h3>
+            <span class="shrink-0 font-mono text-xs text-zinc-500">{project.data.year}</span>
+          </div>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {project.data.summary}
+          </p>
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {project.data.stack.map((tech) => (
+              <span class="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 font-mono text-[11px] text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Notes -->
+  {notes.length > 0 && (
+    <section class="mt-16 space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          Engineering Notes
+        </h2>
+        <a href="/notes" class="font-mono text-xs text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-100">
+          All notes →
+        </a>
+      </div>
+
+      <div class="divide-y divide-zinc-200 border-y border-zinc-200 dark:divide-zinc-800/80 dark:border-zinc-800/80">
+        {notes.map((note) => (
+          <a
+            href={`/notes/${note.id}`}
+            class="group flex flex-col gap-1 py-4 transition sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+          >
+            <div>
+              <h3 class="text-sm font-medium text-zinc-900 group-hover:underline dark:text-zinc-100">
+                {note.data.title}
+              </h3>
+              <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{note.data.summary}</p>
+            </div>
+            <time
+              datetime={note.data.date.toISOString()}
+              class="shrink-0 font-mono text-xs text-zinc-500"
+            >
+              {note.data.date.toISOString().slice(0, 10)}
+            </time>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Stack -->
+  <section class="mt-16 space-y-5">
+    <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+      Core Stack
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-3">
+      {SITE.stack.map((bucket) => (
+        <div class="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800/90 dark:bg-zinc-900/40">
+          <h3 class="font-mono text-xs font-medium text-zinc-900 dark:text-zinc-200">
+            {bucket.group}
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {bucket.items.join(' · ')}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
