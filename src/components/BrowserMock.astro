@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE } from '../data/site';
+import { accentVar, isoDate, pad2 } from '../utils/accent';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  notes: CollectionEntry<'notes'>[];
+}
+
+const { projects, notes } = Astro.props;
+---
+
+<div class="device-host">
+  <div class="device">
+    <!-- Window chrome: traffic lights, tab, address bar -->
+    <div class="flex items-center gap-3 px-4 py-3 sm:px-5">
+      <span class="flex gap-1.5" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-vermilion"></span>
+        <span class="h-3 w-3 rounded-full bg-ochre"></span>
+        <span class="h-3 w-3 rounded-full bg-sage"></span>
+      </span>
+      <span class="hidden items-center gap-2 rounded-lg bg-line px-3 py-1 text-[12px] font-medium text-ink-2 sm:inline-flex">
+        <span class="grid h-3.5 w-3.5 place-items-center rounded-full bg-vermilion text-[8px] font-bold text-[#fffaf1]" aria-hidden="true">M</span>
+        Projects — {SITE.name}
+      </span>
+      <span class="mx-auto flex min-w-0 items-center gap-2 rounded-full bg-line px-4 py-1 font-mono text-[11.5px] text-ink-2 sm:mx-0 sm:ml-auto sm:mr-auto">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+        <span class="truncate">{SITE.handle}/projects</span>
+      </span>
+      <span class="hidden w-[84px] sm:block" aria-hidden="true"></span>
+    </div>
+
+    <!-- Screen: a live miniature of the real /projects page -->
+    <div class="device-screen" aria-hidden="true" inert>
+      <div class="device-page px-[5cqw] pb-[6cqw] pt-[3cqw]">
+        <div class="mx-auto flex w-fit items-center gap-[1.4cqw] rounded-full px-[1.2cqw] py-[0.8cqw] text-[1.5cqw] text-ink-2 glass">
+          <span class="grid h-[3cqw] w-[3cqw] place-items-center rounded-full bg-vermilion text-[1.3cqw] font-bold text-[#fffaf1]">M</span>
+          <span class="font-semibold text-ink">{SITE.handle}</span>
+          <span class="rounded-full bg-line px-[1.2cqw] py-[0.4cqw] text-ink">Projects</span>
+          <span>Notes</span>
+          <span class="rounded-full bg-vermilion px-[1.4cqw] py-[0.5cqw] font-semibold text-[#fffaf1]">Get in touch</span>
+        </div>
+
+        <p class="mt-[7cqw] text-[1.25cqw] font-semibold uppercase tracking-[0.2em] text-ink-3">● Projects</p>
+        <p class="mt-[1.6cqw] text-[6.4cqw] font-semibold leading-[0.98] tracking-[-0.045em] text-ink">
+          Built, shipped <span class="text-fade">&amp; operated.</span>
+        </p>
+
+        <div class="mt-[4.5cqw] grid gap-[2cqw]">
+          {projects.map((project, i) => (
+            <div class="card flex items-end justify-between gap-[3cqw] rounded-[2.4cqw] p-[3.2cqw]" style={`--accent:${accentVar(i)}`}>
+              <div class="min-w-0">
+                <p class="text-[1.15cqw] font-semibold uppercase tracking-[0.2em] text-ink-3">{project.data.year} · Case study</p>
+                <p class="mt-[1.2cqw] text-[3.1cqw] font-semibold leading-[1.02] tracking-[-0.04em] text-ink">{project.data.title}</p>
+                <p class="mt-[1.2cqw] max-w-[60cqw] text-[1.55cqw] leading-relaxed text-ink-2">{project.data.summary}</p>
+                <div class="mt-[1.6cqw] flex flex-wrap gap-[0.8cqw]">
+                  {project.data.stack.map((tech) => (
+                    <span class="rounded-full px-[1cqw] py-[0.3cqw] font-mono text-[1.15cqw] text-ink-2 shadow-[inset_0_0_0_1px_var(--line)]">{tech}</span>
+                  ))}
+                </div>
+              </div>
+              <span class="index-num text-accent text-[9cqw]">{pad2(i + 1)}</span>
+            </div>
+          ))}
+        </div>
+
+        <p class="mt-[6cqw] text-[1.25cqw] font-semibold uppercase tracking-[0.2em] text-ink-3">● Writing</p>
+        <div class="mt-[2cqw] grid gap-[1.6cqw]">
+          {notes.map((note) => (
+            <div class="card flex items-center gap-[3cqw] rounded-[2cqw] p-[2.6cqw]">
+              <span class="font-mono text-[1.2cqw] text-ink-3">{isoDate(note.data.date)}</span>
+              <span class="text-[2cqw] font-semibold tracking-[-0.025em] text-ink">{note.data.title}</span>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-[6cqw] flex items-center justify-between border-t border-line pt-[2.4cqw] text-[1.3cqw] text-ink-3">
+          <span>© {new Date().getFullYear()} {SITE.name}</span>
+          <span>Back to top ↑</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
