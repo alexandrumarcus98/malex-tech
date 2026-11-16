@@ -15,3 +15,4 @@ A unified web control plane built with **FastAPI**, **async SQLite (WAL + FTS5)*
 - **Isolated HTTP connection pools:** Separates latency-sensitive search requests from background telemetry/health checks so slow upstream indexers never stall the UI.
 - **Scoped authentication & secrets:** Supports passkeys (WebAuthn), session cookies, and Fernet-encrypted credentials stored alongside automated consistent online SQLite backups.
 - **Zero public tunnel exposure:** Upstream services stay bound to internal container bridge networks and `autossh` tunnels—only the hardened reverse proxy is reachable externally.
+

@@ -27,3 +27,4 @@ const notes = defineCollection({
 });
 
 export const collections = { projects, notes };
+

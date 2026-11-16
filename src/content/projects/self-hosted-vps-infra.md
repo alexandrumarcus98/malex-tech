@@ -15,3 +15,4 @@ Production-grade personal infrastructure built to run multiple containerized wor
 - **WireGuard-only SSH & CI/CD:** Public port `22` stays closed. GitHub Actions runners join an isolated WireGuard peer and authenticate using an SSH key pinned to a forced deploy command.
 - **3-2-1 encrypted backups:** Consistent database snapshots run before daily `restic` encrypted backups to off-site cloud storage, monitored via dead-man's-switch pings and Discord webhooks.
 - **Offloaded static edge:** Static sites (including `malex.tech`) live on Cloudflare Pages so VPS maintenance or restarts never affect public availability.
+

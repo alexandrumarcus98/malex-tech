@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import NoteRow from '../../components/NoteRow.astro';
 import { SITE } from '../../data/site';
 
 const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
@@ -9,36 +11,16 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
 ---
 
 <BaseLayout title={`Notes — ${SITE.name}`} description="Short engineering notes on backend systems, Docker, and Linux.">
-  <section class="space-y-8">
-    <div class="space-y-2">
-      <h1 class="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-        Engineering Notes
-      </h1>
-      <p class="text-sm text-zinc-600 dark:text-zinc-400">
+  <section class="wrap pb-24 pt-36 sm:pt-44">
+    <div class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end">
+      <SectionHeading as="h1" eyebrow="Notes" lead="Engineering" fade="notes." accent="var(--sage)" />
+      <p class="reveal text-[17px] leading-relaxed text-ink-2">
         Practical writeups on backend architecture, Linux operations, and security.
       </p>
     </div>
 
-    <div class="divide-y divide-zinc-200 border-y border-zinc-200 dark:divide-zinc-800/80 dark:border-zinc-800/80">
-      {notes.map((note) => (
-        <a
-          href={`/notes/${note.id}`}
-          class="group flex flex-col gap-1 py-5 transition sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-        >
-          <div>
-            <h2 class="text-base font-medium text-zinc-900 group-hover:underline dark:text-zinc-100">
-              {note.data.title}
-            </h2>
-            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{note.data.summary}</p>
-          </div>
-          <time
-            datetime={note.data.date.toISOString()}
-            class="shrink-0 font-mono text-xs text-zinc-500"
-          >
-            {note.data.date.toISOString().slice(0, 10)}
-          </time>
-        </a>
-      ))}
+    <div class="mt-16 grid gap-4">
+      {notes.map((note, i) => <NoteRow note={note} index={i} as="h2" />)}
     </div>
   </section>
 </BaseLayout>
