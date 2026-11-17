@@ -19,7 +19,12 @@ const { Content } = await render(note);
 const minutes = readingMinutes(note.body);
 ---
 
-<BaseLayout title={`${note.data.title} — ${SITE.name}`} description={note.data.summary}>
+<BaseLayout
+  title={`${note.data.title} — ${SITE.name}`}
+  description={note.data.summary}
+  ogType="article"
+  publishedTime={note.data.date.toISOString()}
+>
   <article style={`--accent:${accentVar(index + 1)}`}>
     <header class="relative isolate overflow-hidden">
       <div
@@ -28,7 +33,7 @@ const minutes = readingMinutes(note.body);
       ></div>
       <div class="wrap pb-14 pt-32 sm:pt-40">
         <div class="mx-auto max-w-[52rem]">
-          <a href="/notes" class="btn btn-glass glass btn-sm in" style="--i:0">← Notes</a>
+          <a href="/notes/" class="btn btn-glass glass btn-sm in" style="--i:0">← Notes</a>
           <p class="eyebrow in mt-12 flex w-fit" style="--i:1">
             <time datetime={note.data.date.toISOString()}>{isoDate(note.data.date)}</time>
             <span aria-hidden="true">·</span>

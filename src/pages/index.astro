@@ -67,7 +67,7 @@ const tickerItems = SITE.stack.flatMap((bucket) => bucket.items);
 
       <div class="in mt-9 flex flex-wrap items-center justify-center gap-3" style="--i:4">
         <a href={`mailto:${SITE.email}`} class="btn btn-solid">Get in touch</a>
-        <a href="/projects" class="btn btn-glass glass">View projects</a>
+        <a href="/projects/" class="btn btn-glass glass">View projects</a>
       </div>
 
       <ul class="in mt-12 flex flex-col items-center justify-center gap-x-6 gap-y-2.5 sm:flex-row sm:flex-wrap text-[11.5px] font-semibold uppercase tracking-[0.18em] text-ink-3" style="--i:5">
@@ -127,8 +127,8 @@ const tickerItems = SITE.stack.flatMap((bucket) => bucket.items);
       <div class="reveal space-y-6">
         {supporting && <p class="text-[17px] leading-relaxed text-ink-2">{supporting}</p>}
         <div class="flex flex-wrap gap-6 text-[14.5px] font-semibold">
-          <a href="/projects" class="link-u text-ink">Projects →</a>
-          <a href="/notes" class="link-u text-ink-2 hover:text-ink">Notes →</a>
+          <a href="/projects/" class="link-u text-ink">Projects →</a>
+          <a href="/notes/" class="link-u text-ink-2 hover:text-ink">Notes →</a>
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@ const tickerItems = SITE.stack.flatMap((bucket) => bucket.items);
   <section class="section wrap pt-0">
     <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <SectionHeading eyebrow="Selected work" lead="Systems I've" fade="built & run." />
-      <a href="/projects" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All projects →</a>
+      <a href="/projects/" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All projects →</a>
     </div>
 
     <div class="mt-14 grid gap-6">
@@ -170,7 +170,7 @@ const tickerItems = SITE.stack.flatMap((bucket) => bucket.items);
     <section class="section wrap pt-0">
       <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <SectionHeading eyebrow="Writing" lead="Engineering" fade="notes." accent="var(--sage)" />
-        <a href="/notes" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All notes →</a>
+        <a href="/notes/" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All notes →</a>
       </div>
 
       <div class="mt-14 grid gap-4">

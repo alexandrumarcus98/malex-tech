@@ -15,7 +15,7 @@ Read the matching skill in `.claude/skills/` when working in that area:
 - `src/content.config.ts`: Astro Content Layer schemas (`projects` and `notes` collections).
 - `src/layouts/BaseLayout.astro`: Shared HTML shell, theme toggle (`localStorage.theme` + `html.dark`), nav, and footer.
 - `src/styles/global.css`: Tailwind v4 `@import "tailwindcss"`, `@plugin "@tailwindcss/typography"`, `@custom-variant dark`, design tokens (cream `#efe6d5` / sage `#9dbeb7` / vermilion `#e73213` on warm charcoal; light values on `:root`, dark on `html.dark`), fonts (`Rethink Sans` + `JetBrains Mono`), compositor-only motion gated by `prefers-reduced-motion`, and Shiki dual-theme overrides.
-- `src/components/`: `SectionHeading`, `ProjectCard`, `NoteRow`; `src/utils/accent.ts` cycles palette accents by list position.
+- `src/components/`: `SectionHeading`, `BrowserMock`, `ProjectCard`, `NoteRow`; `src/utils/accent.ts` cycles palette accents by list position.
 - `public/_headers`: Security headers (`/*`) and immutable asset caching (`/_astro/*`).
 - `wrangler.jsonc`: Cloudflare Workers Static Assets config (`assets.directory: "./dist"`, `not_found_handling: "404-page"`).
 

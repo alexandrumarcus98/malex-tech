@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://malex.tech/sitemap-index.xml

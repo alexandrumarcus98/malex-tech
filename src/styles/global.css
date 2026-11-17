@@ -33,18 +33,18 @@
   --bg: #efe6d5;
   --bg-deep: #e6dbc6;
   --ink: #1b1d22;
-  --ink-2: rgb(27 29 34 / 0.72);
-  --ink-3: rgb(27 29 34 / 0.58);
+  --ink-2: rgb(27 29 34 / 0.76);
+  --ink-3: rgb(27 29 34 / 0.66);
   --line: rgb(27 29 34 / 0.10);
   --line-2: rgb(27 29 34 / 0.16);
 
-  --vermilion: #d42c0e;
+  --vermilion: #bc2208;
   --sage: #4f7d75;
   --sage-fill: #9dbeb7;
   --ochre: #a86a12;
   --on-accent: #fffaf1;
 
-  --fade: linear-gradient(180deg, #3f6c64 0%, #7fa59d 100%);
+  --fade: linear-gradient(180deg, #2f564f 0%, #437067 100%);
   --halo: rgb(231 50 19 / 0.09);
   --halo-2: rgb(157 190 183 / 0.32);
 
@@ -56,7 +56,7 @@
     0 24px 60px -28px rgb(60 40 20 / 0.28);
   --card-bg: linear-gradient(180deg, rgb(250 246 238 / 0.92), rgb(245 238 226 / 0.72));
 
-  --btn-bg: linear-gradient(180deg, #e2391a 0%, #c9290c 100%);
+  --btn-bg: linear-gradient(180deg, #d42d0e 0%, #b52107 100%);
   --btn-ink: #fffaf1;
   --btn-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.28),
@@ -98,7 +98,7 @@ html.dark {
     0 24px 60px -18px rgb(0 0 0 / 0.6);
   --card-bg: linear-gradient(180deg, rgb(239 230 213 / 0.065), rgb(239 230 213 / 0.025));
 
-  --btn-bg: linear-gradient(180deg, #ea3e1d 0%, #cf2d0f 100%);
+  --btn-bg: linear-gradient(180deg, #d83112 0%, #b82308 100%);
   --btn-ink: #fffaf1;
   --btn-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.22),
@@ -153,6 +153,10 @@ html.dark {
     outline-offset: 3px;
     border-radius: 8px;
   }
+
+  #main:focus {
+    outline: none;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -204,7 +208,8 @@ html.dark {
     );
     transition: opacity 0.5s var(--ease);
   }
-  .card[data-spotlight]:hover::before { opacity: 1; }
+  .card[data-spotlight]:hover::before,
+  .card[data-spotlight]:focus-visible::before { opacity: 1; }
 
   /* Rotating accent ring (transform-only, composited). */
   .ring {
@@ -405,7 +410,8 @@ html.dark {
       background 0.3s,
       color 0.3s;
   }
-  .group:hover .arrow-btn {
+  .group:hover .arrow-btn,
+  .group:focus-visible .arrow-btn {
     background: var(--ink);
     color: var(--bg);
   }
@@ -424,7 +430,8 @@ html.dark {
     background-repeat: no-repeat;
     transition: background-size 0.5s var(--ease), color 0.25s;
   }
-  .link-u:hover { background-size: 100% 1px; }
+  .link-u:hover,
+  .link-u:focus-visible { background-size: 100% 1px; }
 
   /* Navigation island (iOS-style floating pill) */
   .island {
@@ -464,6 +471,9 @@ html.dark {
   .tab[aria-current="page"] {
     color: var(--ink);
     background: color-mix(in oklab, var(--ink) 10%, transparent);
+  }
+  .tab-cta {
+    color: var(--vermilion);
   }
 
   /* Infinite ticker */
@@ -694,19 +704,25 @@ html.dark {
       var(--glass-shadow),
       0 34px 80px -34px color-mix(in oklab, var(--accent, var(--vermilion)) 60%, transparent);
   }
-  .btn:hover { translate: 0 -2px; }
-  .btn:hover::after {
+  .btn:hover,
+  .btn:focus-visible { translate: 0 -2px; }
+  .btn:hover::after,
+  .btn:focus-visible::after {
     transform: translate3d(420%, 0, 0) skewX(-16deg);
     transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .group:hover .arrow-btn { transform: rotate(-45deg); }
-  .icon-btn:hover { transform: rotate(-12deg) scale(1.06); }
+  .group:hover .arrow-btn,
+  .group:focus-visible .arrow-btn { transform: rotate(-45deg); }
+  .icon-btn:hover,
+  .icon-btn:focus-visible { transform: rotate(-12deg) scale(1.06); }
   .ring::before { animation: spin 4.5s linear infinite; animation-play-state: paused; }
-  .group:hover .ring::before { animation-play-state: running; }
+  .group:hover .ring::before,
+  .group:focus-visible .ring::before { animation-play-state: running; }
 
   /* Ambient loops */
   .ticker-track { animation: ticker 48s linear infinite; }
-  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker:hover .ticker-track,
+  .ticker:focus-within .ticker-track { animation-play-state: paused; }
   .blob-a { animation: drift-a 18s ease-in-out infinite; }
   .blob-b { animation: drift-b 22s ease-in-out infinite; }
   .blob-c { animation: drift-a 26s ease-in-out infinite reverse; }

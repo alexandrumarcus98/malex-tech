@@ -16,7 +16,7 @@ const { project, index } = Astro.props;
 const { Content } = await render(project);
 ---
 
-<BaseLayout title={`${project.data.title} — ${SITE.name}`} description={project.data.summary}>
+<BaseLayout title={`${project.data.title} — ${SITE.name}`} description={project.data.summary} ogType="article">
   <article style={`--accent:${accentVar(index)}`}>
     <header class="relative isolate overflow-hidden">
       <div
@@ -24,7 +24,7 @@ const { Content } = await render(project);
         aria-hidden="true"
       ></div>
       <div class="wrap pb-14 pt-32 sm:pt-40">
-        <a href="/projects" class="btn btn-glass glass btn-sm in" style="--i:0">← Projects</a>
+        <a href="/projects/" class="btn btn-glass glass btn-sm in" style="--i:0">← Projects</a>
 
         <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div class="space-y-7">

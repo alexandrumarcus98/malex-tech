@@ -19,8 +19,14 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
       </p>
     </div>
 
-    <div class="mt-16 grid gap-4">
-      {notes.map((note, i) => <NoteRow note={note} index={i} as="h2" />)}
-    </div>
+    {notes.length > 0 ? (
+      <div class="mt-16 grid gap-4">
+        {notes.map((note, i) => <NoteRow note={note} index={i} as="h2" />)}
+      </div>
+    ) : (
+      <div class="card mt-16 p-8 text-center text-[17px] text-ink-2 sm:p-12">
+        No engineering notes published yet.
+      </div>
+    )}
   </section>
 </BaseLayout>
