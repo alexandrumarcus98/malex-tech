@@ -1,0 +1,20 @@
+---
+interface Props {
+  eyebrow?: string;
+  lead: string;
+  fade?: string;
+  as?: 'h1' | 'h2';
+  size?: 'display' | 'statement';
+  accent?: string;
+  class?: string;
+}
+
+const { eyebrow, lead, fade, as: Tag = 'h2', size = 'display', accent, class: className } = Astro.props;
+---
+
+<div class:list={['space-y-6', className]} style={accent ? `--accent:${accent}` : undefined}>
+  {eyebrow && <p class="eyebrow reveal">{eyebrow}</p>}
+  <Tag class:list={[size, 'reveal']}>
+    {lead}{fade && <>{' '}<span class="text-fade">{fade}</span></>}
+  </Tag>
+</div>
