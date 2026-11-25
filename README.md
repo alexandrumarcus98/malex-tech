@@ -1,5 +1,8 @@
 # malex.tech
 
+[![CI](https://github.com/alexandrumarcus98/malex-tech/actions/workflows/ci.yml/badge.svg)](https://github.com/alexandrumarcus98/malex-tech/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Personal software developer site built with **Astro + Tailwind CSS** and deployed on **Cloudflare Workers Static Assets** (`wrangler.jsonc`, `$0`, zero VPS load).
 
 ## Local Development
