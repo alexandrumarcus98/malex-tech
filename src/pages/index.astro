@@ -1,0 +1,202 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import NoteRow from '../components/NoteRow.astro';
+import BrowserMock from '../components/BrowserMock.astro';
+import { SITE } from '../data/site';
+import { accentVar, pad2 } from '../utils/accent';
+
+const projects = (await getCollection('projects', ({ data }) => data.featured)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const allNotes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const notes = allNotes.slice(0, 3);
+
+const [firstName, ...restName] = SITE.name.split(' ');
+const lastName = restName.join(' ');
+
+// Statement: first bio sentence as the headline, the rest as supporting copy.
+const [leadSentence, ...restSentences] = SITE.bio.split(/(?<=\.)\s+/);
+const splitAt = leadSentence.lastIndexOf(', and ');
+const statementLead = splitAt > 0 ? leadSentence.slice(0, splitAt + 1) : leadSentence;
+const statementFade = splitAt > 0 ? leadSentence.slice(splitAt + 2) : '';
+const supporting = restSentences.join(' ');
+
+// Word-by-word scroll reveal: each word lights up over its own slice of the heading's view timeline.
+const statementWords = [
+  ...statementLead.split(/\s+/).filter(Boolean).map((text) => ({ text, fade: false })),
+  ...statementFade.split(/\s+/).filter(Boolean).map((text) => ({ text, fade: true })),
+];
+const wordRange = (i: number) => {
+  const start = 8 + (44 * i) / Math.max(1, statementWords.length);
+  return `--ws:cover ${start.toFixed(1)}%;--we:cover ${(start + 9).toFixed(1)}%`;
+};
+
+const tickerItems = SITE.stack.flatMap((bucket) => bucket.items);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden">
+    <div class="hero-bg pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      <div class="grid-bg absolute inset-0"></div>
+      <div class="blob blob-a left-[-12%] top-[6%] h-[38rem] w-[38rem] bg-[radial-gradient(circle,var(--sage-fill)_0%,transparent_62%)]"></div>
+      <div class="blob blob-b right-[-14%] top-[18%] h-[34rem] w-[34rem] bg-[radial-gradient(circle,color-mix(in_oklab,var(--vermilion)_55%,transparent)_0%,transparent_62%)]"></div>
+      <div class="blob blob-c bottom-[-30%] left-[30%] h-[30rem] w-[30rem] bg-[radial-gradient(circle,color-mix(in_oklab,var(--ochre)_35%,transparent)_0%,transparent_62%)]"></div>
+    </div>
+
+    <div class="hero-content wrap flex min-h-[92svh] flex-col items-center justify-center pb-20 pt-32 text-center sm:pt-40">
+      <p class="pill glass in" style="--i:0">
+        <span class="h-1.5 w-1.5 rounded-full bg-vermilion" aria-hidden="true"></span>
+        {SITE.tagline.replace(/\.$/, '')}
+      </p>
+
+      <h1 class="hero-title mt-8">
+        <span class="line-mask" style="--i:0"><span>{firstName}</span></span>
+        <span class="line-mask" style="--i:1"><span class="text-vermilion">{lastName}.</span></span>
+      </h1>
+
+      <p class="in mt-8 max-w-[40rem] text-[17px] leading-relaxed text-ink-2 sm:text-[19px]" style="--i:3">
+        {SITE.bio}
+      </p>
+
+      <div class="in mt-9 flex flex-wrap items-center justify-center gap-3" style="--i:4">
+        <a href={`mailto:${SITE.email}`} class="btn btn-solid">Get in touch</a>
+        <a href="/projects/" class="btn btn-glass glass">View projects</a>
+      </div>
+
+      <ul class="in mt-12 flex flex-col items-center justify-center gap-x-6 gap-y-2.5 sm:flex-row sm:flex-wrap text-[11.5px] font-semibold uppercase tracking-[0.18em] text-ink-3" style="--i:5">
+        <li class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-sage" aria-hidden="true"></span>{SITE.status}</li>
+        <li class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-vermilion" aria-hidden="true"></span>{projects.length} case studies</li>
+        <li class="inline-flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-ochre" aria-hidden="true"></span>{allNotes.length} engineering notes</li>
+      </ul>
+    </div>
+
+    <div class="hero-content absolute bottom-8 left-[var(--gutter)] hidden flex-col items-start gap-3 text-[10.5px] font-semibold uppercase tracking-[0.24em] text-ink-3 lg:flex" aria-hidden="true">
+      Scroll
+      <span class="block h-10 w-px overflow-hidden bg-line-2"><span class="scroll-cue block h-full w-full bg-ink"></span></span>
+    </div>
+  </section>
+
+  <!-- Stack ticker -->
+  <div class="ticker overflow-hidden border-y border-line py-6" aria-label="Tech stack">
+    <div class="ticker-scroll">
+    <ul class="ticker-track flex items-center gap-10 whitespace-nowrap text-[clamp(1.25rem,1rem+1.2vw,2rem)] font-semibold tracking-[-0.03em] text-ink-2">
+      {[0, 1].map((copy) =>
+        tickerItems.map((item, i) => (
+          <li class="flex items-center gap-10" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {item}
+            <span class="text-[0.6em]" style={`color:${accentVar(i)}`} aria-hidden="true">✦</span>
+          </li>
+        ))
+      )}
+    </ul>
+    </div>
+  </div>
+
+  <!-- Built like this: browser mockup that tilts in and scrolls -->
+  <section class="section wrap">
+    <div class="flex flex-col items-center text-center">
+      <SectionHeading eyebrow="This site" lead="Built like" fade="this." class="flex flex-col items-center" />
+      <p class="reveal mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2">
+        Astro + Tailwind, statically built and served from Cloudflare's edge. Scroll to look around.
+      </p>
+    </div>
+    <div class="mx-auto mt-14 max-w-5xl">
+      <BrowserMock projects={projects} notes={allNotes} />
+    </div>
+  </section>
+
+  <!-- Statement + stack -->
+  <section class="section wrap pt-0">
+    <h2 class="statement words-host max-w-5xl">
+      {statementWords.map((word, i) => (
+        <>
+          <span class:list={['word whitespace-nowrap', word.fade && 'text-fade']} style={wordRange(i)}>{word.text}</span>{' '}
+        </>
+      ))}
+    </h2>
+
+    <div class="mt-12 grid gap-8 md:grid-cols-[1fr_minmax(0,26rem)]">
+      <div class="hidden md:block"></div>
+      <div class="reveal space-y-6">
+        {supporting && <p class="text-[17px] leading-relaxed text-ink-2">{supporting}</p>}
+        <div class="flex flex-wrap gap-6 text-[14.5px] font-semibold">
+          <a href="/projects/" class="link-u text-ink">Projects →</a>
+          <a href="/notes/" class="link-u text-ink-2 hover:text-ink">Notes →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card tilt-in mt-16 grid sm:grid-cols-3">
+      {SITE.stack.map((bucket, i) => (
+        <div
+          class:list={['reveal p-7 sm:p-9', i > 0 && 'border-t border-line sm:border-l sm:border-t-0']}
+          style={`--accent:${accentVar(i)};--si:${i}`}
+        >
+          <div class="flex items-center justify-between">
+            <p class="eyebrow">{bucket.group}</p>
+            <span class="font-mono text-xs text-ink-3">{pad2(i + 1)}</span>
+          </div>
+          <ul class="mt-8 space-y-2.5">
+            {bucket.items.map((item) => (
+              <li class="text-[17px] font-medium tracking-[-0.01em] text-ink">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Selected work -->
+  <section class="section wrap pt-0">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <SectionHeading eyebrow="Selected work" lead="Systems I've" fade="built & run." />
+      <a href="/projects/" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All projects →</a>
+    </div>
+
+    <div class="mt-14 grid gap-6">
+      {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+    </div>
+  </section>
+
+  <!-- Notes -->
+  {notes.length > 0 && (
+    <section class="section wrap pt-0">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <SectionHeading eyebrow="Writing" lead="Engineering" fade="notes." accent="var(--sage)" />
+        <a href="/notes/" class="link-u reveal shrink-0 text-[14.5px] font-semibold text-ink">All notes →</a>
+      </div>
+
+      <div class="mt-14 grid gap-4">
+        {notes.map((note, i) => <NoteRow note={note} index={i} />)}
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="section relative isolate overflow-hidden">
+    <div
+      class="zoom-thru pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[40rem] w-[60rem] max-w-[160vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--vermilion)_22%,transparent)_0%,transparent_65%)]"
+      aria-hidden="true"
+    ></div>
+    <div class="wrap flex flex-col items-center text-center">
+      <p class="eyebrow reveal">Get in touch</p>
+      <h2 class="display reveal mt-6 max-w-4xl">
+        Let's build something <span class="text-vermilion">reliable.</span>
+      </h2>
+      <p class="reveal mt-7 max-w-xl text-[17px] leading-relaxed text-ink-2">
+        {SITE.status}. The fastest way to reach me is email.
+      </p>
+      <div class="reveal mt-10 flex flex-wrap justify-center gap-3">
+        <a href={`mailto:${SITE.email}`} class="btn btn-solid">Email me</a>
+        <a href={SITE.github} target="_blank" rel="noopener noreferrer" class="btn btn-glass glass">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

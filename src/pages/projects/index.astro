@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { SITE } from '../../data/site';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout title={`Projects — ${SITE.name}`} description="Selected software and infrastructure projects.">
+  <section class="wrap pb-24 pt-36 sm:pt-44">
+    <div class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end">
+      <SectionHeading as="h1" eyebrow="Projects" lead="Built, shipped" fade="& operated." />
+      <p class="reveal text-[17px] leading-relaxed text-ink-2">
+        Systems, backend services, and developer tooling I’ve built and operated.
+      </p>
+    </div>
+
+    {projects.length > 0 ? (
+      <div class="mt-16 grid gap-6">
+        {projects.map((project, i) => <ProjectCard project={project} index={i} as="h2" />)}
+      </div>
+    ) : (
+      <div class="card mt-16 p-8 text-center text-[17px] text-ink-2 sm:p-12">
+        No projects published yet.
+      </div>
+    )}
+  </section>
+</BaseLayout>

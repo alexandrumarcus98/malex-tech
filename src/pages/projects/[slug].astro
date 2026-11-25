@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../data/site';
+import { accentVar, pad2 } from '../../utils/accent';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, index) => ({
+    params: { slug: project.id },
+    props: { project, index },
+  }));
+}
+
+const { project, index } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={`${project.data.title} — ${SITE.name}`} description={project.data.summary} ogType="article">
+  <article style={`--accent:${accentVar(index)}`}>
+    <header class="relative isolate overflow-hidden">
+      <div
+        class="pointer-events-none absolute -right-40 -top-40 -z-10 h-[36rem] w-[36rem] bg-[radial-gradient(circle,color-mix(in_oklab,var(--accent)_28%,transparent)_0%,transparent_62%)]"
+        aria-hidden="true"
+      ></div>
+      <div class="wrap pb-14 pt-32 sm:pt-40">
+        <a href="/projects/" class="btn btn-glass glass btn-sm in" style="--i:0">← Projects</a>
+
+        <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div class="space-y-7">
+            <p class="eyebrow in flex w-fit" style="--i:1">{project.data.year} · Case study</p>
+            <h1 class="display in max-w-5xl" style="--i:2">{project.data.title}</h1>
+            <p class="in max-w-3xl text-[18px] leading-relaxed text-ink-2 sm:text-[20px]" style="--i:3">
+              {project.data.summary}
+            </p>
+          </div>
+          <span class="index-num text-accent in hidden lg:block" style="--i:2" aria-hidden="true">{pad2(index + 1)}</span>
+        </div>
+
+        <div class="in mt-10 flex flex-wrap items-center gap-2" style="--i:4">
+          {project.data.stack.map((tech) => <span class="chip">{tech}</span>)}
+          {project.data.repo && (
+            <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="btn btn-solid btn-sm ml-auto">
+              Source ↗
+            </a>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="border-t border-line pb-20 pt-14">
+        <div class="prose prose-site mx-auto max-w-[44rem]">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

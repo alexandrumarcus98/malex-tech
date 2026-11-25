@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import NoteRow from '../../components/NoteRow.astro';
+import { SITE } from '../../data/site';
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<BaseLayout title={`Notes — ${SITE.name}`} description="Short engineering notes on backend systems, Docker, and Linux.">
+  <section class="wrap pb-24 pt-36 sm:pt-44">
+    <div class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end">
+      <SectionHeading as="h1" eyebrow="Notes" lead="Engineering" fade="notes." accent="var(--sage)" />
+      <p class="reveal text-[17px] leading-relaxed text-ink-2">
+        Practical writeups on backend architecture, Linux operations, and security.
+      </p>
+    </div>
+
+    {notes.length > 0 ? (
+      <div class="mt-16 grid gap-4">
+        {notes.map((note, i) => <NoteRow note={note} index={i} as="h2" />)}
+      </div>
+    ) : (
+      <div class="card mt-16 p-8 text-center text-[17px] text-ink-2 sm:p-12">
+        No engineering notes published yet.
+      </div>
+    )}
+  </section>
+</BaseLayout>

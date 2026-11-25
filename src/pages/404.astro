@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout title={`404 — ${SITE.name}`} noindex>
+  <section class="relative isolate overflow-hidden">
+    <div class="grid-bg pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="wrap flex min-h-[86svh] flex-col items-center justify-center pb-16 pt-32 text-center" style="--accent:var(--vermilion)">
+      <p class="hero-title text-accent in" style="--i:0" aria-hidden="true">404</p>
+      <h1 class="display in mt-6 text-[clamp(2rem,1.4rem+2.6vw,3.5rem)]" style="--i:1">Page not found</h1>
+      <p class="in mt-5 max-w-md text-[17px] leading-relaxed text-ink-2" style="--i:2">
+        That route doesn’t exist. Head back to the overview or browse projects.
+      </p>
+      <div class="in mt-9 flex flex-wrap justify-center gap-3" style="--i:3">
+        <a href="/" class="btn btn-solid">← Home</a>
+        <a href="/projects/" class="btn btn-glass glass">Projects</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
